@@ -1,9 +1,9 @@
 <?php
-   
+
 namespace App\Http\Requests;
-  
+
 use Illuminate\Foundation\Http\FormRequest;
-  
+
 class StudentUpdateRequest extends FormRequest
 {
     /**
@@ -17,13 +17,14 @@ class StudentUpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array|string>
+     * @return array
      */
     public function rules(): array
     {
         return [
             'name' => 'required',
-            'detail' => 'required'
+            'detail' => 'required',  // ✅ Added missing comma
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

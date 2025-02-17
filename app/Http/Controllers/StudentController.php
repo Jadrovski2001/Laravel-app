@@ -1,15 +1,15 @@
 <?php
-    
+
 namespace App\Http\Controllers;
-    
+
 use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+
 use Illuminate\View\View;
 use App\Http\Requests\StudentStoreRequest;
 use App\Http\Requests\StudentUpdateRequest;
-use App\Models\University;
+
 
 
 class StudentController extends Controller
@@ -19,15 +19,14 @@ class StudentController extends Controller
      */
     public function index(): View
     {
-        
+        // Retrieve students with their university and paginate
         $students = Student::with('university')->latest()->paginate(5);
 
-
-          
+        
         return view('students.index', compact('students'))
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -35,20 +34,20 @@ class StudentController extends Controller
     {
         return view('students.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StudentStoreRequest $request): RedirectResponse
+    
     {
-        //dd($request);
+
         // Handle image upload
-        $imagePath = null;
+        $imageName = null;
         if ($request->hasFile('image')) {
-            // Store the image in the 'images' folder within the 'public' disk
-            $imagePath = $request->file('image')->store('images', 'public');
-            $imageName = $request->image->hashName();
-            //dd($imageName);
+            // Store the image directly in the 'public/images' folder
+            $imageName = $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images'), $imageName);
         }
 
         // Create the student and save the image path
@@ -59,8 +58,9 @@ class StudentController extends Controller
         ]);
 
         return redirect()->route('students.index')
-                         ->with('success', 'Student created successfully.');
+            ->with('success', 'Student created successfully.');
     }
+
     /**
      * Display the specified resource.
      */
@@ -68,7 +68,7 @@ class StudentController extends Controller
     {
         return view('students.show', compact('student'));
     }
-  
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -76,42 +76,41 @@ class StudentController extends Controller
     {
         return view('students.edit', compact('student'));
     }
-  
+
     /**
      * Update the specified resource in storage.
      */
     public function update(StudentUpdateRequest $request, Student $student): RedirectResponse
-{
-    // Retain the old image path if no new image is uploaded
-    $imagePath = $student->image;
+    {
+        // Retain the old image path if no new image is uploaded
+        $imageName = $student->image;
 
-    // Check if a new image is uploaded
-    if ($request->hasFile('image')) {
-        // Delete the old image if a new one is uploaded and it's not a default image
-        if ($imagePath && $imagePath != 'default.png') {
-            // Delete the old image from the 'storage/images' folder
-            $oldImagePath = storage_path('app/public/images/' . $imagePath);
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+        // Check if a new image is uploaded
+        if ($request->hasFile('image')) {
+            // Delete the old image if a new one is uploaded and it's not a default image
+            if ($imageName && $imageName != 'default.png') {
+                $oldImagePath = public_path('images/' . $imageName);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
+
+            // Store the new image and get the filename
+            $imageName = $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images'), $imageName);
         }
 
-        // Store the new image in the 'storage/images' folder and get the filename
-        $imagePath = $request->file('image')->getClientOriginalName();
-        $request->file('image')->storeAs('images', $imagePath, 'public');  // Store in 'storage/app/public/images'
+        // Update the student with the new image path (if any)
+        $student->update([
+            'name' => $request->name,
+            'detail' => $request->detail,
+            'image' => $imageName,  // Store the image path in the database
+        ]);
+
+        return redirect()->route('students.index')
+            ->with('success', 'Student updated successfully.');
     }
 
-    // Update the student with the new image path (if any)
-    $student->update([
-        'name' => $request->name,
-        'detail' => $request->detail,
-        'image' => $imagePath,
-    ]);
-
-    return redirect()->route('students.index')
-                     ->with('success', 'Student updated successfully.');
-}
-  
     /**
      * Remove the specified resource from storage.
      */
@@ -119,12 +118,15 @@ class StudentController extends Controller
     {
         // Delete the image if it exists
         if ($student->image) {
-            \Storage::disk('public')->delete($student->image);
+            $imagePath = public_path('images/' . $student->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);  // Delete the image file
+            }
         }
-        
+
         $student->delete();
-           
+
         return redirect()->route('students.index')
-                         ->with('success', 'Student deleted successfully.');
+            ->with('success', 'Student deleted successfully.');
     }
 }

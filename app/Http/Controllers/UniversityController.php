@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\University;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\View\View;
 use App\Http\Requests\UniversityStoreRequest;
 use App\Http\Requests\UniversityUpdateRequest;
@@ -37,17 +36,17 @@ class UniversityController extends Controller
     public function store(UniversityStoreRequest $request): RedirectResponse
     {
         // Handle image upload
-        $imagePath = null;
+        $imageName = null;
         if ($request->hasFile('image')) {
             // Store the image in the 'images' folder within the 'public' disk
-            $imagePath = $request->file('image')->store('images', 'public');
-            $imageName = $request->image->hashName();
+            $imageName = $request->image->hashName();  // Using hashName to avoid name collision
+            $request->file('image')->storeAs('images', $imageName, 'public');  // Store image in public storage
         }
 
         // Create the university and save the image path
         University::create([
             'name' => $request->name,
-            'detail' => $request->detail,
+            'address' => $request->address,  // Replaced 'detail' with 'address'
             'image' => $imageName,  // Store the image path in the database
         ]);
 
@@ -77,29 +76,29 @@ class UniversityController extends Controller
     public function update(UniversityUpdateRequest $request, University $university): RedirectResponse
     {
         // Retain the old image path if no new image is uploaded
-        $imagePath = $university->image;
+        $imageName = $university->image;
 
         // Check if a new image is uploaded
         if ($request->hasFile('image')) {
             // Delete the old image if a new one is uploaded and it's not a default image
-            if ($imagePath && $imagePath != 'default.png') {
+            if ($imageName && $imageName != 'default.png') {
                 // Delete the old image from the 'storage/images' folder
-                $oldImagePath = storage_path('app/public/images/' . $imagePath);
+                $oldImagePath = storage_path('app/public/images/' . $imageName);
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }
             }
 
             // Store the new image in the 'storage/images' folder and get the filename
-            $imagePath = $request->file('image')->getClientOriginalName();
-            $request->file('image')->storeAs('images', $imagePath, 'public');  // Store in 'storage/app/public/images'
+            $imageName = $request->image->hashName();  // Using hashName to avoid name collision
+            $request->file('image')->storeAs('images', $imageName, 'public');  // Store image in public storage
         }
 
         // Update the university with the new image path (if any)
         $university->update([
             'name' => $request->name,
-            'detail' => $request->detail,
-            'image' => $imagePath,
+            'address' => $request->address,  // Replaced 'detail' with 'address'
+            'image' => $imageName,  // Store the image path in the database
         ]);
 
         return redirect()->route('universities.index')
@@ -113,7 +112,7 @@ class UniversityController extends Controller
     {
         // Delete the image if it exists
         if ($university->image) {
-            \Storage::disk('public')->delete($university->image);
+            \Storage::disk('public')->delete('images/' . $university->image);
         }
         
         $university->delete();
@@ -121,4 +120,4 @@ class UniversityController extends Controller
         return redirect()->route('universities.index')
                          ->with('success', 'University deleted successfully.');
     }
-}
+}  

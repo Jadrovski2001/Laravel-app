@@ -35,23 +35,25 @@
 
                     <!-- Display the Image if available -->
                     <td>
-    @if($student->image)
-        <img src="{{ asset('storage/images/' . $student->image) }}" alt="Image" width="100">
-    @else
-        No Image
-    @endif
-</td>
-
+                        @if($student->image)
+                            <img src="{{ asset('images/' . $student->image) }}" alt="Image" width="100">
+                        @else
+                            No Image
+                        @endif
+                    </td>
 
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->detail }}</td>
                     <td>
                         <form action="{{ route('students.destroy', $student->id) }}" method="POST">
              
+
                             <a class="btn btn-info btn-sm" href="{{ route('students.show', $student->id) }}"><i class="fa-solid fa-list"></i> Show</a>
               
+
                             <a class="btn btn-primary btn-sm" href="{{ route('students.edit', $student->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
              
+
                             @csrf
                             @method('DELETE')
                 
@@ -72,9 +74,8 @@
 
   </div>
 </div> 
-</div> 
+
 
 @include('layouts.footer') <!-- Include the footer at the end -->
 
 @endsection
- 

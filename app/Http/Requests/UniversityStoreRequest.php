@@ -24,7 +24,7 @@ class UniversityStoreRequest extends FormRequest
         return [
             'name' => 'required',
             'address' => 'required',
-            'image_upload' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
