@@ -5,8 +5,19 @@
 
 @section('content')
 
+<style>
+    .text-mirror-shadow {
+        color: #007bff; /* Bootstrap primary blue */
+        font-size: 2.5rem;
+        text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+        position: relative;
+        display: inline-block;
+        -webkit-box-reflect: below 10px linear-gradient(transparent, rgba(0, 0, 0, 0.4)); /* Stronger reflection */
+    }
+</style>
+
 <div class="card mt-5">
-  <h2 class="card-header">Students</h2>
+  <h2 class="card-header text-mirror-shadow">Students</h2> <!-- Stronger shadow & reflection -->
   <div class="card-body">
           
         @if(session('success'))
