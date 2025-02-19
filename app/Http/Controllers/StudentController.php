@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\University;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,8 @@ class StudentController extends Controller
      */
     public function create(): View
     {
-        return view('students.create');
+        $universities = University::all();
+        return view('students.create' , compact('universities'));
     }
 
     /**
@@ -55,6 +57,7 @@ class StudentController extends Controller
             'name' => $request->name,
             'detail' => $request->detail,
             'image' => $imageName,  // Store the image path in the database
+            'university_id' => $request->university_id,  // Store university_id
         ]);
 
         return redirect()->route('students.index')
@@ -74,7 +77,8 @@ class StudentController extends Controller
      */
     public function edit(Student $student): View
     {
-        return view('students.edit', compact('student'));
+        $universities = University::all();
+        return view('students.edit', compact('student', 'universities'));
     }
 
     /**
@@ -105,6 +109,7 @@ class StudentController extends Controller
             'name' => $request->name,
             'detail' => $request->detail,
             'image' => $imageName,  // Store the image path in the database
+            'university_id' => $request->university_id,
         ]);
 
         return redirect()->route('students.index')

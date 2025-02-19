@@ -29,14 +29,14 @@
         </div>
   
         <div class="mb-3">
-            <label for="inputDetail" class="form-label"><strong>Detail:</strong></label>
+            <label for="inputAddress" class="form-label"><strong>Address:</strong></label>
             <textarea 
-                class="form-control @error('detail') is-invalid @enderror" 
+                class="form-control @error('address') is-invalid @enderror" 
                 style="height:150px" 
-                name="detail" 
-                id="inputDetail" 
-                placeholder="Detail">{{ $university->detail }}</textarea>
-            @error('detail')
+                name="address" 
+                id="inputAddress" 
+                placeholder="Address">{{ $university->address }}</textarea>
+            @error('address')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror
         </div>
@@ -46,7 +46,7 @@
             <div class="mb-3">
                 <label class="form-label"><strong>Current Image:</strong></label>
                 <br>
-                <img src="{{ asset('storage/' . $university->image) }}" width="150" alt="University Image">
+                <img src="{{ asset('images/' . $university->image) }}" width="150" alt="University Image">
             </div>
         @endif
 

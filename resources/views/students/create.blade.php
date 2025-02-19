@@ -43,16 +43,14 @@
 
         <!-- University Dropdown -->
         <div class="mb-3">
-            <label for="universitySelect" class="form-label"><strong>Select University:</strong></label>
-            <select name="university" id="universitySelect" class="form-control @error('university') is-invalid @enderror">
-                <option value="">Choose a university</option>
-                <option value="Harvard University">Harvard University</option>
-                <option value="Stanford University">Stanford University</option>
-                <option value="MIT">MIT</option>
-                <option value="University of Oxford">University of Oxford</option>
-                <option value="University of Cambridge">University of Cambridge</option>
+            <label for="university_id" class="form-label"><strong>University:</strong></label>
+            <select name="university_id" class="form-control @error('university_id') is-invalid @enderror">
+                <option value="">Select University</option>
+                @foreach($universities as $university)
+                    <option value="{{ $university->id }}">{{ $university->name }}</option>
+                @endforeach
             </select>
-            @error('university')
+            @error('university_id')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror
         </div>

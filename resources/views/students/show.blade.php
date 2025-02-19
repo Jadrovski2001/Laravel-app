@@ -11,10 +11,10 @@
         <a class="btn btn-primary btn-sm" href="{{ route('students.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
     </div>
   
-    <div class="row">
+    <div class="row text-danger">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Name:</strong> <br/>
+                <strong class="">Name:</strong> <br/>
                 {{ $student->name }}
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <strong>Image:</strong> <br/>
                     <!-- Correct image path for public storage -->
-                    <img src="{{ asset('storage/images/' . $student->image) }}" width="150" alt="Student Image">
+                    <img src="{{ asset('images/' . $student->image) }}" width="150" alt="Student Image">
                 </div>
             </div>
         @else

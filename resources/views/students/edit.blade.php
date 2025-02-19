@@ -41,12 +41,27 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="university_id" class="form-label"><strong>University:</strong></label>
+            <select name="university_id" class="form-control @error('university_id') is-invalid @enderror">
+                <option value="">Select University</option>
+                @foreach($universities as $university)
+                    <option value="{{ $university->id }}" {{ $student->university_id == $university->id ? 'selected' : '' }}>
+                        {{ $university->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('university_id')
+                <div class="form-text text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
         <!-- Display Current Image -->
         @if($student->image)
             <div class="mb-3">
                 <label class="form-label"><strong>Current Image:</strong></label>
                 <br>
-                <img src="{{ asset('storage/' . $student->image) }}" width="150" alt="Student Image">
+                <img src="{{ asset('images/' . $student->image) }}" width="150" alt="Student Image">
             </div>
         @endif
 

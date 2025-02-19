@@ -9,6 +9,7 @@ class Student extends Model
         'name',
         'detail',
         'image',
+        'university_id',
 
     ];
 

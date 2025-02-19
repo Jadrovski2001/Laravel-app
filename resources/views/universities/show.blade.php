@@ -10,7 +10,7 @@
         <a class="btn btn-primary btn-sm" href="{{ route('universities.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
     </div>
   
-    <div class="row">
+    <div class="row text-danger">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Name:</strong> <br/>
@@ -19,10 +19,25 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
             <div class="form-group">
-                <strong>Details:</strong> <br/>
-                {{ $university->detail }}
+                <strong>Address:</strong> <br/>
+                {{ $university->address }}
             </div>
         </div>
+
+          <!-- Display Image -->
+          @if($university->image)
+            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                <div class="form-group">
+                    <strong>Image:</strong> <br/>
+                    <!-- Correct image path for public storage -->
+                    <img src="{{ asset('images/' . $university->image) }}" width="150" alt="Student Image">
+                </div>
+            </div>
+        @else
+            <p>No image available.</p>
+        @endif
+    </div>
+
     </div>
   
   </div>

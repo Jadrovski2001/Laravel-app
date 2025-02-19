@@ -24,6 +24,7 @@
                     <th>Image</th> <!-- Added Image Column -->
                     <th>Name</th>
                     <th>Details</th>
+                    <th>University</th>
                     <th width="250px">Action</th>
                 </tr>
             </thead>
@@ -44,6 +45,7 @@
 
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->detail }}</td>
+                    <td>{{ $student->university ? $student->university->name : 'N/A' }}</td>
                     <td>
                         <form action="{{ route('students.destroy', $student->id) }}" method="POST">
              

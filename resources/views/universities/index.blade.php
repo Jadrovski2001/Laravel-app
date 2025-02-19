@@ -23,7 +23,7 @@
                     <th width="50px">No</th>
                     <th>Image</th> <!-- Added Image Column -->
                     <th>Name</th>
-                    <th>Details</th>
+                    <th>Address</th>
                     <th width="250px">Action</th>
                 </tr>
             </thead>
@@ -36,14 +36,14 @@
                     <!-- Display the Image if available -->
                     <td>
                         @if($university->image)
-                            <img src="{{ asset('storage/images/' . $university->image) }}" alt="Image" width="100">
+                            <img src="{{ asset('images/' . $university->image) }}" alt="Image" width="100">
                         @else
                             No Image
                         @endif
                     </td>
 
                     <td>{{ $university->name }}</td>
-                    <td>{{ $university->detail }}</td>
+                    <td>{{ $university->address }}</td>
                     <td>
                         <form action="{{ route('universities.destroy', $university->id) }}" method="POST">
              
